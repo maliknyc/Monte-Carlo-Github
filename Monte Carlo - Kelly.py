@@ -189,10 +189,10 @@ def plot_final_wealth_histogram(final_wealths):
     - final_wealths (list): Final wealth from each simulation.
     """
     plt.figure(figsize=(12, 6))
-    plt.hist(final_wealths, bins=30, edgecolor='black', alpha=0.7)
+    plt.hist(final_wealths, bins=50, edgecolor='black', alpha=0.7)
     plt.xlabel("Final Wealth")
     plt.ylabel("Frequency")
-    plt.title("Histogram of Final Wealth After Simulations")
+    plt.title("Final Wealth After Simulations (Kelly)")
     plt.grid(True)
     plt.show()
 
@@ -204,13 +204,13 @@ def simulate_gamblers_ruin_advanced():
     
     # PARAMETERS! (NOTE: MUST BE A POSITIVE EV BET)
     starting_wealth = 1000      # Starting wealth
-    return_win_percent = 105     # Percentage profit on a win (e.g., 260% for 2.6x profit)
+    return_win_percent = 110     # Percentage profit on a win (e.g., 260% for 2.6x profit)
     return_loss_percent = -100   # Percentage loss on a loss (-100% to lose the wager)
     p_up = 0.5                    # Probability of winning each bet
     p_down = 1 - p_up                  # Probability of losing each bet (1 - p_up)
-    upper_bet_limit = 10000     # Maximum number of bets
+    upper_bet_limit = 1000     # Maximum number of bets
     lower_threshold = 5           # Bankruptcy threshold
-    num_simulations = 100        # Number of simulations to run
+    num_simulations = 1000        # Number of simulations to run
     
     
     
@@ -247,6 +247,7 @@ def simulate_gamblers_ruin_advanced():
     print(f"Expected Return of Bet (ER): {bet_ER}")
     print(f"Expected Variance of Bet (Var): {bet_Var}")
     print(f"Expected Standard Deviation of Bet (Std): {bet_Std}")
+    print(final_wealths)
 
 if __name__ == "__main__":
     simulate_gamblers_ruin_advanced()
@@ -255,3 +256,4 @@ if __name__ == "__main__":
 NEXT OBJECTIVE:
     Employ strategies derived from different CRRA functions from gamma = 1 (Kelly Criterion) to gamma = 0
 '''
+

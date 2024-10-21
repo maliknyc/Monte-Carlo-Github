@@ -176,10 +176,10 @@ def plot_final_wealth_histogram(final_wealths):
     - final_wealths (list): Final wealth from each simulation.
     """
     plt.figure(figsize=(12, 6))
-    plt.hist(final_wealths, bins=30, edgecolor='black', alpha=0.7)
+    plt.hist(final_wealths, bins=50, edgecolor='black', alpha=0.7)
     plt.xlabel("Final Wealth")
     plt.ylabel("Frequency")
-    plt.title("Histogram of Final Wealth After Simulations")
+    plt.title("Final Wealth After Simulations")
     plt.grid(True)
     plt.show()
 
@@ -194,13 +194,13 @@ def simulate_gamblers_ruin_advanced():
     # PARAMETERS!
     starting_wealth = 1000      # starting wealth
     wager_amount = 100            # amount wagered each bet
-    return_win_percent = 105     # (decimal odds - 1) * 100
+    return_win_percent = 110     # (decimal odds - 1) * 100
   # return_loss_percent = -100   # not used
     p_up = 0.5                    # probability of winning each bet
     p_down = 1 - p_up             # probability of losing each bet
     upper_bet_limit = 1000    # max number of bets
     lower_threshold = 5           # bankruptcy threshold
-    num_simulations = 100        # number of simulations to run
+    num_simulations = 1000        # number of simulations to run
     
     
     # calculate up_amount and down_amount based on wager and percentage returns
@@ -239,7 +239,7 @@ def simulate_gamblers_ruin_advanced():
     print(f"Expected Return of Bet: {bet_ER}")
     print(f"Expected Variance of Bet: {bet_Var}")
     print(f"Expected Standard Deviation of Bet: {bet_Std}")
-
+    print(final_wealths)
 if __name__ == "__main__":
     simulate_gamblers_ruin_advanced()
     
