@@ -190,9 +190,9 @@ def simulate_gamblers_ruin_advanced():
     
     # PARAMETERS!
     starting_wealth = 10000      
-    up_amount = 50                # potential upside
-    p_up = 0.51                    # probability of win
-    down_amount = 50               # potential downside. Also "initial investment"
+    up_amount = 65                # potential upside
+    p_up = 0.3                    # probability of win
+    down_amount = 25               # potential downside. Also "initial investment"
     p_down = 1 - p_up                  # probability of loss
     upper_bet_limit = 1000         # maximum # of bets
     lower_threshold = 0           # bankruptcy threshold
@@ -200,9 +200,12 @@ def simulate_gamblers_ruin_advanced():
     
     bet_EV = round((p_up * up_amount) - (p_down * down_amount),3)
     bet_ER = bet_EV/down_amount
-    #bet
     bet_Var = (p_up * (up_amount**2)) + (p_down * (down_amount**2))
+    bet_Var = round(((p_up * ((up_amount/down_amount)**2) + (p_down))) - (bet_ER**2), 5)
     bet_Std = math.sqrt(bet_Var)
+
+    
+    
     
     print(f"Starting Advanced Simulation with the following parameters:")
     print(f"Starting Wealth: {starting_wealth}")
