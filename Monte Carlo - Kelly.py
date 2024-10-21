@@ -2,18 +2,18 @@ import random
 import matplotlib.pyplot as plt
 import math
 
-def run_single_simulation(starting_wealth, up_amount, p_up, down_amount, p_down, upper_bet_limit, lower_threshold):
+def run_single_simulation(starting_wealth, return_win_percent, p_up, return_loss_percent, p_down, upper_bet_limit, lower_threshold):
     """
-    Runs simulation of repeated fixed bets.
+    Runs a single simulation of the Gambler's Ruin problem with dynamic wagering based on the Kelly Criterion.
 
     Parameters:
     - starting_wealth (float): Initial amount of wealth.
-    - up_amount (float): Amount won per successful bet.
+    - return_win_percent (float): Percentage profit on a win (e.g., 260 for 260%).
     - p_up (float): Probability of winning each bet.
-    - down_amount (float): Amount lost per unsuccessful bet.
+    - return_loss_percent (float): Percentage loss on a loss (e.g., -100 for losing the wager).
     - p_down (float): Probability of losing each bet.
     - upper_bet_limit (int): Maximum number of bets to simulate.
-    - lower_threshold (float): Wealth level to stop betting (0 for bankruptcy or 1).
+    - lower_threshold (float): Wealth level to stop betting (0 for bankruptcy).
 
     Returns:
     - wealth_history (list): List of wealth after each bet.
@@ -31,6 +31,22 @@ def run_single_simulation(starting_wealth, up_amount, p_up, down_amount, p_down,
 
     while bet_count < upper_bet_limit and current_wealth > lower_threshold:
         bet_count += 1
+
+        # calculate kelly fraction
+        b = return_win_percent / 100  # net odds
+        f_star = (b * p_up - p_down) / b  # KELLY CRITERION
+
+        # ensure f_star is within [0,1]
+        f_star = max(0, min(f_star, 1))
+
+        # determine wager amount
+        wager_amount = f_star * current_wealth
+
+        # calculate up_amount and down_amount based on wager_amount
+        up_amount = wager_amount * b  # Profit on win
+        down_amount = abs(wager_amount * (return_loss_percent / 100))  # Loss on loss (typically wager_amount)
+
+        # simulate bet outcome
         outcome = random.random()
 
         if outcome < p_up:
@@ -49,32 +65,28 @@ def run_single_simulation(starting_wealth, up_amount, p_up, down_amount, p_down,
         if current_wealth < min_wealth:
             min_wealth = current_wealth
 
-        # Print the outcome of the current bet
-        #print(f"Bet {bet_count}: {result} | Current Wealth: {current_wealth}")
+        # uncomment below to see detailed bet outcomes...
+        # print(f"Bet {bet_count}: {result} | Wager: {wager_amount:.2f} | Current Wealth: {current_wealth:.2f}")
 
-        # Check if wealth has hit the lower threshold
+        # check if wealth has hit the lower threshold
         if current_wealth <= lower_threshold:
-            print("\n--- Stopping Simulation ---")
+            print(f"\n--- Stopping Simulation ---")
             print(f"Wealth has reached the lower threshold of {lower_threshold}.")
             went_bankrupt = True
             break
     else:
         pass
-        #print("\n--- Stopping Simulation ---")
-        #print(f"Reached the upper limit of {upper_bet_limit} bets.")
+        # uncomment below if you want to see when upper bet limit is reached...
+        # print("\n--- Stopping Simulation ---")
+        # print(f"Reached the upper limit of {upper_bet_limit} bets.")
 
     # Final Results
-    #print("\n=== Simulation Summary ===")
     print(f"Total Bets Placed: {bet_count}")
-    #print(f"Final Wealth: {current_wealth}")
-    #print(f"Peak Wealth Achieved: {peak_wealth}")
-    #print(f"Minimum Wealth Achieved: {min_wealth}\n")
-
     return wealth_history, peak_wealth, min_wealth, went_bankrupt, bet_count
 
-def run_multiple_simulations(num_simulations, starting_wealth, up_amount, p_up, down_amount, p_down, upper_bet_limit, lower_threshold):
+def run_multiple_simulations(num_simulations, starting_wealth, return_win_percent, p_up, return_loss_percent, p_down, upper_bet_limit, lower_threshold):
     """
-    Runs multiple simulations of repeated fixed bets.
+    Runs multiple simulations of the Gambler's Ruin problem with dynamic wagering based on the Kelly Criterion.
 
     Parameters:
     - num_simulations (int): Number of simulations to run.
@@ -100,9 +112,10 @@ def run_multiple_simulations(num_simulations, starting_wealth, up_amount, p_up, 
     simulations_with_max_bets_before_ruin = []
 
     for sim in range(1, num_simulations + 1):
-        #print(f"\n=== Simulation {sim} ===")
+        # uncomment below to see individual simulation headers...
+        # print(f"\n=== Simulation {sim} ===")
         wealth_history, peak_wealth, min_wealth, went_bankrupt, bet_count = run_single_simulation(
-            starting_wealth, up_amount, p_up, down_amount, p_down, upper_bet_limit, lower_threshold
+            starting_wealth, return_win_percent, p_up, return_loss_percent, p_down, upper_bet_limit, lower_threshold
         )
         all_wealth_histories.append(wealth_history)
         final_wealths.append(wealth_history[-1])
@@ -139,7 +152,7 @@ def run_multiple_simulations(num_simulations, starting_wealth, up_amount, p_up, 
     print(f"Average Minimum Wealth Achieved: {average_min_wealth:.2f}")
     print(f"Smallest Minimum Wealth Achieved: {smallest_min_wealth}")
     print(f"Highest Peak Wealth Achieved: {highest_peak_wealth}")
-    
+
     # add the new summary for simulations that hit ruin and survived the most bets
     if ruin_count > 0:
         print(f"Simulation(s) that hit ruin and survived the most bets ({max_bets_before_ruin} bets): {simulations_with_max_bets_before_ruin}")
@@ -163,7 +176,7 @@ def plot_sample_histories(all_wealth_histories, num_samples=10):
         plt.plot(history, label=f"Simulation {i+1}")
     plt.xlabel("# of Bets")
     plt.ylabel("Wealth")
-    plt.title(f"Wealth Progression (First {num_samples} Simulations)")
+    plt.title(f"Wealth Progression w/ Kelly (First {num_samples} Simulations)")
     #plt.legend()
     plt.grid(True)
     plt.show()
@@ -189,34 +202,28 @@ def simulate_gamblers_ruin_advanced():
     """
     print("=== Advanced Gambler's Ruin Simulation ===\n")
     
-
-    
-    # PARAMETERS!
-    starting_wealth = 1000      # starting wealth
-    wager_amount = 100            # amount wagered each bet
-    return_win_percent = 260     # (decimal odds - 1) * 100
-  # return_loss_percent = -100   # not used
-    p_up = 0.3                    # probability of winning each bet
-    p_down = 1 - p_up             # probability of losing each bet
-    upper_bet_limit = 1000    # max number of bets
-    lower_threshold = 5           # bankruptcy threshold
-    num_simulations = 100        # number of simulations to run
-    
-    
-    # calculate up_amount and down_amount based on wager and percentage returns
-    up_amount = wager_amount * (return_win_percent / 100)    # e.g., 25 * 2.6 = 65
-    down_amount = wager_amount # always just the wager amount
+    # PARAMETERS! (NOTE: MUST BE A POSITIVE EV BET)
+    starting_wealth = 1000      # Starting wealth
+    return_win_percent = 260     # Percentage profit on a win (e.g., 260% for 2.6x profit)
+    return_loss_percent = -100   # Percentage loss on a loss (-100% to lose the wager)
+    p_up = 0.3                    # Probability of winning each bet
+    p_down = 1 - p_up                  # Probability of losing each bet (1 - p_up)
+    upper_bet_limit = 1000     # Maximum number of bets
+    lower_threshold = 5           # Bankruptcy threshold
+    num_simulations = 100        # Number of simulations to run
     
     # calculate Expected Value (EV) and other statistics
-    bet_EV = round((p_up * up_amount) - (p_down * down_amount), 3)
-    bet_ER = bet_EV / down_amount
-    bet_Var = round(((p_up * ((return_win_percent/100)**2) + (p_down))) - (bet_ER**2), 5)
+    b = return_win_percent / 100  # Net odds
+    bet_EV = round((p_up * b - p_down) * 100, 3)  # EV per $100 wagered
+    bet_ER = round(bet_EV / 100, 3)  # EV per $1 wagered
+    # variance calculation for binary outcomes
+    bet_Var = round((p_up * (b**2)) + (p_down * (1**2)) - (bet_ER**2), 5)
     bet_Std = round(math.sqrt(bet_Var), 5)
     
     print(f"Starting Advanced Simulation with the following parameters:")
     print(f"Starting Wealth: {starting_wealth}")
-    print(f"Wager Amount per Bet: {wager_amount}")
-    print(f"Return on Win: {return_win_percent}% (Profit Amount: {up_amount})")
+    print(f"Return on Win: {return_win_percent}% (Profit Multiplier: {b})")
+    print(f"Return on Loss: {return_loss_percent}% (Loss Multiplier: 1)")
     print(f"Probability of Winning: {p_up}")
     print(f"Probability of Losing: {p_down}")
     print(f"Upper Limit of Bets: {upper_bet_limit}")
@@ -224,25 +231,24 @@ def simulate_gamblers_ruin_advanced():
     print(f"Number of Simulations: {num_simulations}\n")
     
     final_wealths, peak_wealths, min_wealths, all_wealth_histories, ruin_count, smallest_min_wealth, highest_peak_wealth = run_multiple_simulations(
-        num_simulations, starting_wealth, up_amount, p_up, down_amount, p_down, upper_bet_limit, lower_threshold
+        num_simulations, starting_wealth, return_win_percent, p_up, return_loss_percent, p_down, upper_bet_limit, lower_threshold
     )
     
+    # plot a sample of wealth histories
     plot_sample_histories(all_wealth_histories, num_samples=num_simulations)
     
     # plot histogram of final wealths
     plot_final_wealth_histogram(final_wealths)
     
     print("=== Additional Insights ===")
-    #print(f"Maximum Wealth Achieved Across All Simulations: {highest_peak_wealth}")
-    #print(f"Minimum Wealth Achieved Across All Simulations: {smallest_min_wealth}\n")
-    print(f"Expected Value of Bet: {bet_EV}")
-    print(f"Expected Return of Bet: {bet_ER}")
-    print(f"Expected Variance of Bet: {bet_Var}")
-    print(f"Expected Standard Deviation of Bet: {bet_Std}")
+    print(f"Expected Value of Bet (EV): {bet_EV}")
+    print(f"Expected Return of Bet (ER): {bet_ER}")
+    print(f"Expected Variance of Bet (Var): {bet_Var}")
+    print(f"Expected Standard Deviation of Bet (Std): {bet_Std}")
 
 if __name__ == "__main__":
     simulate_gamblers_ruin_advanced()
-    
+
 '''
 NEXT OBJECTIVE:
     Employ strategies derived from different CRRA functions from gamma = 1 (Kelly Criterion) to gamma = 0
