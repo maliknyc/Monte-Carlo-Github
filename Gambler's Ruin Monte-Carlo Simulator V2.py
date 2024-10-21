@@ -200,7 +200,7 @@ def simulate_gamblers_ruin_advanced():
     p_down = 1 - p_up             # probability of losing each bet
     upper_bet_limit = 1000    # max number of bets
     lower_threshold = 5           # bankruptcy threshold
-    num_simulations = 1000        # number of simulations to run
+    num_simulations = 440        # number of simulations to run
     
     
     # calculate up_amount and down_amount based on wager and percentage returns
@@ -239,7 +239,7 @@ def simulate_gamblers_ruin_advanced():
     print(f"Expected Return of Bet: {bet_ER}")
     print(f"Expected Variance of Bet: {bet_Var}")
     print(f"Expected Standard Deviation of Bet: {bet_Std}")
-    print(final_wealths)
+
 if __name__ == "__main__":
     simulate_gamblers_ruin_advanced()
     
