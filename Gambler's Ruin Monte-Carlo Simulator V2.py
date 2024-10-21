@@ -194,9 +194,9 @@ def simulate_gamblers_ruin_advanced():
     # PARAMETERS!
     starting_wealth = 1000      # starting wealth
     wager_amount = 100            # amount wagered each bet
-    return_win_percent = 260     # (decimal odds - 1) * 100
+    return_win_percent = 105     # (decimal odds - 1) * 100
   # return_loss_percent = -100   # not used
-    p_up = 0.3                    # probability of winning each bet
+    p_up = 0.5                    # probability of winning each bet
     p_down = 1 - p_up             # probability of losing each bet
     upper_bet_limit = 1000    # max number of bets
     lower_threshold = 5           # bankruptcy threshold
