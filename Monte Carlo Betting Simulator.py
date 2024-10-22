@@ -220,7 +220,7 @@ def simulate_gamblers_ruin_advanced():
     """
     print("=== Monte Carlo Betting Simulation ===\n")
 
-    # PARAMETERS!
+    # SIMULATION PARAMETERS!
     starting_wealth = 100          # starting wealth
     p_up = 0.5                       # probability of winning each bet
     p_down = 1 - p_up                # probability of losing each bet
@@ -228,11 +228,11 @@ def simulate_gamblers_ruin_advanced():
     lower_threshold = 1              # bankruptcy threshold
     num_simulations = 100            # number of simulations to run
 
-    # Betting Parameters
+    # BET PARAMETERS
     return_win_percent = 110         # (decimal odds - 1) * 100
     b = return_win_percent / 100     # net odds (b to 1)
 
-    # CRRA Utility Parameters
+    # STRATEGY PARAMETERS
     g = 1                          # gamma > 0 (1 for Kelly)
     scale = 1                      # scaling factor (1 for full Kelly, 0.5 for half-Kelly)
 
