@@ -7,20 +7,20 @@ def run_single_simulation(starting_wealth, up_amount, p_up, down_amount, p_down,
     Runs simulation of repeated fixed bets.
 
     Parameters:
-    - starting_wealth (float): Initial amount of wealth.
-    - up_amount (float): Amount won per successful bet.
-    - p_up (float): Probability of winning each bet.
-    - down_amount (float): Amount lost per unsuccessful bet.
-    - p_down (float): Probability of losing each bet.
-    - upper_bet_limit (int): Maximum number of bets to simulate.
-    - lower_threshold (float): Wealth level to stop betting (0 for bankruptcy or 1).
+    - starting_wealth (float): Initial amount of wealth
+    - up_amount (float): Amount won per successful bet
+    - p_up (float): Probability of winning each bet
+    - down_amount (float): Amount lost per unsuccessful bet
+    - p_down (float): Probability of losing each bet
+    - upper_bet_limit (int): Maximum # of bets to simulate
+    - lower_threshold (float): Wealth level to stop betting (typically 0 or 1)
 
     Returns:
-    - wealth_history (list): List of wealth after each bet.
-    - peak_wealth (float): Highest wealth achieved during the simulation.
-    - min_wealth (float): Lowest wealth achieved during the simulation.
-    - went_bankrupt (bool): Whether the simulation ended in ruin.
-    - bet_count (int): Total number of bets placed in the simulation.
+    - wealth_history (list): List of wealth after each bet
+    - peak_wealth (float): Highest wealth achieved during simulation
+    - min_wealth (float): Lowest wealth achieved during simulation
+    - went_bankrupt (bool): Whether simulation ended in ruin
+    - bet_count (int): Total number of bets placed in simulation
     """
     current_wealth = starting_wealth
     bet_count = 0
@@ -74,20 +74,20 @@ def run_single_simulation(starting_wealth, up_amount, p_up, down_amount, p_down,
 
 def run_multiple_simulations(num_simulations, starting_wealth, up_amount, p_up, down_amount, p_down, upper_bet_limit, lower_threshold):
     """
-    Runs multiple simulations of repeated fixed bets.
+    Runs multiple simulations of repeated fixed bets
 
     Parameters:
-    - num_simulations (int): Number of simulations to run.
-    - All other parameters as defined in run_single_simulation.
+    - num_simulations (int): Number of simulations to run
+    - All other parameters as defined in run_single_simulation
 
     Returns:
-    - final_wealths (list): Final wealth from each simulation.
-    - peak_wealths (list): Peak wealth from each simulation.
-    - min_wealths (list): Minimum wealth from each simulation.
-    - all_wealth_histories (list): Wealth histories from all simulations.
-    - ruin_count (int): Number of simulations that ended in ruin.
-    - smallest_min_wealth (float): Smallest minimum wealth achieved across all simulations.
-    - highest_peak_wealth (float): Highest peak wealth achieved across all simulations.
+    - final_wealths (list): Final wealth from each simulation
+    - peak_wealths (list): Peak wealth from each simulation
+    - min_wealths (list): Minimum wealth from each simulation
+    - all_wealth_histories (list): Wealth histories from all simulations
+    - ruin_count (int): Number of simulations that ended in ruin
+    - smallest_min_wealth (float): Smallest minimum wealth achieved across all simulations
+    - highest_peak_wealth (float): Highest peak wealth achieved across all simulations
     """
     ruin_count = 0
     final_wealths = []
@@ -170,10 +170,10 @@ def plot_sample_histories(all_wealth_histories, num_samples=10):
 
 def plot_final_wealth_histogram(final_wealths):
     """
-    Plots a histogram of the final wealths from all simulations.
+    Plots histogram of the final wealths from all simulations
 
     Parameters:
-    - final_wealths (list): Final wealth from each simulation.
+    - final_wealths (list): Final wealth from each simulation
     """
     plt.figure(figsize=(12, 6))
     plt.hist(final_wealths, bins=50, edgecolor='black', alpha=0.7)
@@ -185,7 +185,7 @@ def plot_final_wealth_histogram(final_wealths):
 
 def simulate_gamblers_ruin_advanced():
     """
-    Runs the advanced Gambler's Ruin simulation with predefined parameters.
+    Runs the advanced Gambler's Ruin simulation with predefined parameters
     """
     print("=== Advanced Gambler's Ruin Simulation ===\n")
     
