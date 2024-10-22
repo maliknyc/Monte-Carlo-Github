@@ -1,6 +1,6 @@
 # Monte Carlo Betting Simulation with CRRA Utility
 
-This simulation models betting strategies using the **Kelly Criterion** and extends it via **Constant Relative Risk Aversion (CRRA)** utility functions. You can explore alternative betting strategies by adjusting the risk aversion coefficient (`g`) and a scaling factor.
+This simulation models betting strategies using the **Kelly Criterion** and extends it via **Constant Relative Risk Aversion (CRRA)** utility functions. Where the Kelly Criterion is derived from and prescribes logarithmic utility, the generalized Kelly Criterion I propose is derived from the CRRA function and allows for the exploration of alternative betting strategies by adjusting the risk aversion coefficient (`γ`) and a scaling factor.
 
 ## Features
 - Isoelastic (CRRA) utility function: adjustable betting strategy based on γ
@@ -50,3 +50,21 @@ $$
 Where:
 - \( w \) is wealth.
 - \( γ \) is the relative risk aversion coefficient.
+
+## Kelly Criterion
+$$
+f^* = \frac{pb - (1 - p)}{b}
+$$
+
+Where:
+- \( f* \) is the optimal fraction of capital to bet.
+- \( p \) is the probability of winning the bet.
+- \( b \) is the odds received on the bet (net payout for each unit wagered).
+
+## Generalized Kelly Criterion
+$$
+f^* = \frac{\left( \frac{pb}{1 - p} \right)^{1/γ} - 1}{b + \left( \frac{pb}{1 - p} \right)^{1/γ}}
+$$
+
+Where:
+- \( γ \) is the risk aversion constant.
