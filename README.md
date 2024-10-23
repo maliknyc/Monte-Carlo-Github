@@ -1,6 +1,6 @@
 # Monte Carlo Betting Simulation with CRRA Utility
 
-This simulation models betting strategies using the **Kelly Criterion** and extends it via **Constant Relative Risk Aversion (CRRA)** utility functions. Where the Kelly Criterion is derived from and prescribes logarithmic utility, the generalized Kelly Criterion I propose is derived from the CRRA function and allows for the exploration of alternative betting strategies by adjusting the risk aversion coefficient (`γ`) and a scaling factor.
+This simulation models betting strategies using the **Kelly Criterion** and extends it via **Constant Relative Risk Aversion (CRRA)** utility functions. Where the Kelly Criterion is derived from and prescribes logarithmic utility, the generalized Kelly Criterion I propose is derived from the general CRRA utility function (which logarithmic utility is in the family of) and allows for the exploration of alternative betting strategies by adjusting the risk aversion coefficient (`γ`) and a scaling factor.
 
 ## Features
 - Isoelastic (CRRA) utility function: adjustable betting strategy based on γ
@@ -68,3 +68,4 @@ $$
 
 Where:
 - \( γ \) is the risk aversion constant.
+- Note: When γ = 1, the Generalized Kelly Criterion simplifies to the standard Kelly Criterion (the same way the isoelastic utility function is the logarithmic function when γ = 1).
