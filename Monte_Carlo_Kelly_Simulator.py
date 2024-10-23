@@ -70,7 +70,7 @@ def run_single_simulation(starting_wealth, p_up, p_down, upper_bet_limit, lower_
 
     # Final Results (Uncomment to print individual simulation summaries)
     # print("\n=== Simulation Summary ===")
-    print(f"Total Bets Placed: {bet_count}")
+   #print(f"Total Bets Placed: {bet_count}")
     # print(f"Final Wealth: {current_wealth:.2f}")
     # print(f"Peak Wealth Achieved: {peak_wealth:.2f}")
     # print(f"Minimum Wealth Achieved: {min_wealth:.2f}\n")
@@ -221,12 +221,12 @@ def simulate_gamblers_ruin_advanced():
     print("=== Monte Carlo Betting Simulation ===\n")
 
     # SIMULATION PARAMETERS!
-    starting_wealth = 100          # starting wealth
+    starting_wealth = 1000          # starting wealth
     p_up = 0.5                       # probability of winning each bet
     p_down = 1 - p_up                # probability of losing each bet
     upper_bet_limit = 1000           # max number of bets
-    lower_threshold = 1              # bankruptcy threshold
-    num_simulations = 100            # number of simulations to run
+    lower_threshold = 500              # bankruptcy threshold
+    num_simulations = 1000            # number of simulations to run
 
     # BET PARAMETERS
     return_win_percent = 110         # (decimal odds - 1) * 100
@@ -234,7 +234,7 @@ def simulate_gamblers_ruin_advanced():
 
     # STRATEGY PARAMETERS
     g = 1                          # gamma > 0 (1 for Kelly)
-    scale = 1                      # scaling factor (1 for full Kelly, 0.5 for half-Kelly)
+    scale = 0.5                      # scaling factor (1 for full Kelly, 0.5 for half-Kelly)
 
     # calculate optimal fraction based on CRRA utility
     f_star = compute_optimal_fraction(p_up, b, g)
@@ -277,7 +277,7 @@ def simulate_gamblers_ruin_advanced():
     plot_sample_histories(all_wealth_histories, num_samples=num_simulations, g=g, scale=(scale*100))
 
     # plot histogram of final wealths
-    plot_final_wealth_histogram(final_wealths, num_simulations=num_simulations, g=g, scale=(scale*100))
+    plot_final_wealth_histogram(final_wealths, num_simulations=100, g=g, scale=(scale*100))
 
     print("=== Additional Insights ===")
     print(f"Expected Value of Bet: {bet_EV:.4f}")

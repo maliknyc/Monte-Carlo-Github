@@ -54,8 +54,8 @@ def run_single_simulation(starting_wealth, up_amount, p_up, down_amount, p_down,
 
         # Check if wealth has hit the lower threshold
         if current_wealth <= lower_threshold:
-            print("\n--- Stopping Simulation ---")
-            print(f"Wealth has reached the lower threshold of {lower_threshold}.")
+     #       print("\n--- Stopping Simulation ---")
+     #       print(f"Wealth has reached the lower threshold of {lower_threshold}.")
             went_bankrupt = True
             break
     else:
@@ -65,7 +65,7 @@ def run_single_simulation(starting_wealth, up_amount, p_up, down_amount, p_down,
 
     # Final Results
     #print("\n=== Simulation Summary ===")
-    print(f"Total Bets Placed: {bet_count}")
+  #  print(f"Total Bets Placed: {bet_count}")
     #print(f"Final Wealth: {current_wealth}")
     #print(f"Peak Wealth Achieved: {peak_wealth}")
     #print(f"Minimum Wealth Achieved: {min_wealth}\n")
@@ -190,19 +190,19 @@ def simulate_gamblers_ruin_advanced():
     print("=== Advanced Gambler's Ruin Simulation ===\n")
     
 
-    
+
     # PARAMETERS!
     starting_wealth = 1000      # starting wealth
-    wager_amount = 100            # amount wagered each bet
+    wager_amount = 20            # amount wagered each bet
     return_win_percent = 110     # (decimal odds - 1) * 100
   # return_loss_percent = -100   # not used
     p_up = 0.5                    # probability of winning each bet
     p_down = 1 - p_up             # probability of losing each bet
     upper_bet_limit = 1000    # max number of bets
-    lower_threshold = 5           # bankruptcy threshold
-    num_simulations = 440        # number of simulations to run
+    lower_threshold = 500           # bankruptcy threshold
+    num_simulations = 1000        # number of simulations to run
     
-    
+
     # calculate up_amount and down_amount based on wager and percentage returns
     up_amount = wager_amount * (return_win_percent / 100)    # e.g., 25 * 2.6 = 65
     down_amount = wager_amount # always just the wager amount
@@ -227,7 +227,7 @@ def simulate_gamblers_ruin_advanced():
         num_simulations, starting_wealth, up_amount, p_up, down_amount, p_down, upper_bet_limit, lower_threshold
     )
     
-    plot_sample_histories(all_wealth_histories, num_samples=num_simulations)
+    plot_sample_histories(all_wealth_histories, num_samples=100)
     
     # plot histogram of final wealths
     plot_final_wealth_histogram(final_wealths)
