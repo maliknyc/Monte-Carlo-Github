@@ -1,0 +1,36 @@
+=== Monte Carlo Betting Simulation ===
+
+Parameters for Simulation:
+Starting Wealth: 1000
+Probability of Winning (p_up): 0.5
+Probability of Losing (p_down): 0.5
+Net Odds (b): 1.1 to 1
+Relative Risk Aversion (g): 2
+Scaling Factor (scale): 1
+Optimal Fraction (f*): 0.0227
+Scaled Fraction (f_scaled): 0.0227
+
+Betting Statistics with Scaled Fraction:
+Expected Value of Bet (EV): 0.0011
+Expected Variance of Bet (Var): 0.0006
+Expected Standard Deviation of Bet (Std): 0.0239
+
+
+=== All Simulations Summary ===
+Total Simulations Run: 1000
+Ruin Occurred in 0 Simulations (0.00%)
+Average Final Wealth: 3106.60
+Average Peak Wealth Achieved: 3823.98
+Highest Peak Wealth Achieved: 25337.289923484914
+Average Minimum Wealth Achieved: 773.38
+Smallest Minimum Wealth Achieved: 178.82290982470306
+Highest Final Wealth Achieved: 24199.32114870924
+No simulations ended in ruin.
+
+=== Simulation DataFrame Head ===
+   Simulation  Mean_Log_Wealth  ...  Min_Wealth  Final_Wealth
+0           1         6.807258  ...  515.378193    711.662091
+1           2         6.882144  ...  536.418870   1260.752805
+2           3         7.225727  ...  871.352045   2030.455001
+3           4         7.786972  ...  956.714568   4564.899208
+4           5         7.633152  ...  894.512235   5021.389129

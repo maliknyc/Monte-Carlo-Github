@@ -224,17 +224,17 @@ def simulate_gamblers_ruin_advanced():
     starting_wealth = 1000          # starting wealth
     p_up = 0.5                       # probability of winning each bet
     p_down = 1 - p_up                # probability of losing each bet
-    upper_bet_limit = 1000           # max number of bets
-    lower_threshold = 500              # bankruptcy threshold
-    num_simulations = 1000            # number of simulations to run
+    upper_bet_limit = 100000           # max number of bets
+    lower_threshold = 5              # bankruptcy threshold
+    num_simulations = 500            # number of simulations to run
 
     # BET PARAMETERS
     return_win_percent = 110         # (decimal odds - 1) * 100
     b = return_win_percent / 100     # net odds (b to 1)
 
     # STRATEGY PARAMETERS
-    g = 1                          # gamma > 0 (1 for Kelly)
-    scale = 0.5                      # scaling factor (1 for full Kelly, 0.5 for half-Kelly)
+    g = 0.5                          # gamma > 0 (1 for Kelly)
+    scale = 1                      # scaling factor (1 for full Kelly, 0.5 for half-Kelly)
 
     # calculate optimal fraction based on CRRA utility
     f_star = compute_optimal_fraction(p_up, b, g)
@@ -274,15 +274,15 @@ def simulate_gamblers_ruin_advanced():
     )
 
     # plot sample wealth histories
-    plot_sample_histories(all_wealth_histories, num_samples=num_simulations, g=g, scale=(scale*100))
+    plot_sample_histories(all_wealth_histories, num_samples=100, g=g, scale=(scale*100))
 
     # plot histogram of final wealths
     plot_final_wealth_histogram(final_wealths, num_simulations=100, g=g, scale=(scale*100))
 
-    print("=== Additional Insights ===")
-    print(f"Expected Value of Bet: {bet_EV:.4f}")
-    print(f"Expected Variance of Bet: {bet_Var:.4f}")
-    print(f"Expected Standard Deviation of Bet: {bet_Std:.4f}")
+#    print("=== Additional Insights ===")
+ #   print(f"Expected Value of Bet: {bet_EV:.4f}")
+  #  print(f"Expected Variance of Bet: {bet_Var:.4f}")
+   # print(f"Expected Standard Deviation of Bet: {bet_Std:.4f}")
     #print(final_wealths)
 
 if __name__ == "__main__":
