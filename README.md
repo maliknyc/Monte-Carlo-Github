@@ -59,7 +59,7 @@ $$
 Where:
 - \( f* \) is the optimal fraction of capital to bet.
 - \( p \) is the probability of winning the bet.
-- \( b \) is the odds received on the bet (net payout for each unit wagered).
+- \( b \) is the odds received on the bet (net payout for each unit wagered, decimal odds - 1).
 
 ## Generalized Kelly Criterion
 $$
