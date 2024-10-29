@@ -108,10 +108,10 @@ def run_multiple_simulations(num_simulations, starting_wealth, p_up, p_down, upp
     simulations_with_max_bets_before_ruin = []
 
     # lists for individual sim stats
-    mean_log_wealth_list = []    # Mean of log-wealth
-    std_log_wealth_list = []     # Std Dev of log-wealth
-    slope_log_wealth_list = []   # Slope of log-wealth
-    time_to_ruin_list = []       # Time to ruin (if applicable)
+    mean_log_wealth_list = []    # mean of log-wealth
+    std_log_wealth_list = []     # std of log-wealth
+    slope_log_wealth_list = []   # slope of log-wealth
+    time_to_ruin_list = []       # time to ruin (if applicable)
 
     for sim in range(1, num_simulations + 1):
         # uncomment the following line to track simulation progress...
