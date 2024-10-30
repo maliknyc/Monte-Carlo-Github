@@ -4,7 +4,8 @@ This simulation models betting strategies using the **Kelly Criterion** and exte
 
 ## Features
 - Isoelastic (CRRA) utility function: adjustable betting strategy based on γ
-- Scaling for half-Kelly or other custom betting strategies
+- Fractional Kelly strategies
+- Alternative sizing strategies from generalized Kelly Criterion
 - Monte Carlo simulations to test strategies over time
 - Wealth progression and distribution plots
 
