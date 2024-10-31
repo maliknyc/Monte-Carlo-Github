@@ -193,7 +193,7 @@ def simulate_gamblers_ruin_advanced():
     b = return_win_percent / 100     # net odds (b to 1)
 
     # STRATEGY PARAMETERS
-    g = 1.5                          # gamma > 0 (1 for Kelly)
+    g = 0.5                          # gamma > 0 (1 for Kelly)
     scale = 1                      # scaling factor (1 for full Kelly, 0.5 for half-Kelly)
 
     # calculate optimal fraction based on CRRA utility

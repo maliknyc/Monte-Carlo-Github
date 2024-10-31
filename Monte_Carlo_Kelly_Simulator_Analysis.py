@@ -225,7 +225,7 @@ def simulate_gamblers_ruin_advanced():
     p_up = 0.5                       # probability of winning each bet
     p_down = 1 - p_up                # probability of losing each bet
     upper_bet_limit = 1000           # max number of bets
-    lower_threshold = 100             # bankruptcy threshold
+    lower_threshold = 250             # bankruptcy threshold
     num_simulations = 100            # number of simulations to run
 
     # BET PARAMETERS
