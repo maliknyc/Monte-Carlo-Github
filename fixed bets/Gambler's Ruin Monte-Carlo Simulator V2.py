@@ -3,25 +3,7 @@ import matplotlib.pyplot as plt
 import math
 
 def run_single_simulation(starting_wealth, up_amount, p_up, down_amount, p_down, upper_bet_limit, lower_threshold):
-    """
-    Runs simulation of repeated fixed bets.
 
-    Parameters:
-    - starting_wealth (float): Initial amount of wealth
-    - up_amount (float): Amount won per successful bet
-    - p_up (float): Probability of winning each bet
-    - down_amount (float): Amount lost per unsuccessful bet
-    - p_down (float): Probability of losing each bet
-    - upper_bet_limit (int): Maximum # of bets to simulate
-    - lower_threshold (float): Wealth level to stop betting (typically 0 or 1)
-
-    Returns:
-    - wealth_history (list): List of wealth after each bet
-    - peak_wealth (float): Highest wealth achieved during simulation
-    - min_wealth (float): Lowest wealth achieved during simulation
-    - went_bankrupt (bool): Whether simulation ended in ruin
-    - bet_count (int): Total number of bets placed in simulation
-    """
     current_wealth = starting_wealth
     bet_count = 0
     wealth_history = [current_wealth]
@@ -73,22 +55,7 @@ def run_single_simulation(starting_wealth, up_amount, p_up, down_amount, p_down,
     return wealth_history, peak_wealth, min_wealth, went_bankrupt, bet_count
 
 def run_multiple_simulations(num_simulations, starting_wealth, up_amount, p_up, down_amount, p_down, upper_bet_limit, lower_threshold):
-    """
-    Runs multiple simulations of repeated fixed bets
 
-    Parameters:
-    - num_simulations (int): Number of simulations to run
-    - All other parameters as defined in run_single_simulation
-
-    Returns:
-    - final_wealths (list): Final wealth from each simulation
-    - peak_wealths (list): Peak wealth from each simulation
-    - min_wealths (list): Minimum wealth from each simulation
-    - all_wealth_histories (list): Wealth histories from all simulations
-    - ruin_count (int): Number of simulations that ended in ruin
-    - smallest_min_wealth (float): Smallest minimum wealth achieved across all simulations
-    - highest_peak_wealth (float): Highest peak wealth achieved across all simulations
-    """
     ruin_count = 0
     final_wealths = []
     peak_wealths = []
@@ -151,13 +118,7 @@ def run_multiple_simulations(num_simulations, starting_wealth, up_amount, p_up, 
     return final_wealths, peak_wealths, min_wealths, all_wealth_histories, ruin_count, smallest_min_wealth, highest_peak_wealth
 
 def plot_sample_histories(all_wealth_histories, num_samples=10):
-    """
-    Plots the wealth progression for a sample of simulations.
 
-    Parameters:
-    - all_wealth_histories (list): List of wealth histories from all simulations.
-    - num_samples (int): Number of simulations to plot.
-    """
     plt.figure(figsize=(12, 6))
     for i, history in enumerate(all_wealth_histories[:num_samples]):
         plt.plot(history, label=f"Simulation {i+1}")
@@ -169,12 +130,7 @@ def plot_sample_histories(all_wealth_histories, num_samples=10):
     plt.show()
 
 def plot_final_wealth_histogram(final_wealths):
-    """
-    Plots histogram of the final wealths from all simulations
 
-    Parameters:
-    - final_wealths (list): Final wealth from each simulation
-    """
     plt.figure(figsize=(12, 6))
     plt.hist(final_wealths, bins=50, edgecolor='black', alpha=0.7)
     plt.xlabel("Final Wealth")
@@ -184,9 +140,7 @@ def plot_final_wealth_histogram(final_wealths):
     plt.show()
 
 def simulate_gamblers_ruin_advanced():
-    """
-    Runs the advanced Gambler's Ruin simulation with predefined parameters
-    """
+
     print("=== Advanced Gambler's Ruin Simulation ===\n")
     
 

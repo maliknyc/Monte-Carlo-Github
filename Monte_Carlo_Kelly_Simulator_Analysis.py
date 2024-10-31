@@ -5,25 +5,7 @@ import pandas as pd
 import numpy as np
 
 def run_single_simulation(starting_wealth, p_up, p_down, upper_bet_limit, lower_threshold, f_scaled, b):
-    """
-    Runs simulation of repeated bets with variable bet sizes based on CRRA utility.
 
-    Parameters:
-    - starting_wealth (float): Initial amount of wealth
-    - p_up (float): Probability of winning each bet
-    - p_down (float): Probability of losing each bet
-    - upper_bet_limit (int): Maximum # of bets to simulate
-    - lower_threshold (float): Wealth level to stop betting (typically 0 or 1)
-    - f_scaled (float): Scaled fraction of wealth to bet each round
-    - b (float): Net odds received on the wager (b to 1)
-
-    Returns:
-    - wealth_history (list): List of wealth after each bet
-    - peak_wealth (float): Highest wealth achieved during simulation
-    - min_wealth (float): Lowest wealth achieved during simulation
-    - went_bankrupt (bool): Whether simulation ended in ruin
-    - bet_count (int): Total # of bets placed in the simulation
-    """
     current_wealth = starting_wealth
     bet_count = 0
     wealth_history = [current_wealth]
@@ -80,23 +62,7 @@ def run_single_simulation(starting_wealth, p_up, p_down, upper_bet_limit, lower_
     return wealth_history, peak_wealth, min_wealth, went_bankrupt, bet_count
 
 def run_multiple_simulations(num_simulations, starting_wealth, p_up, p_down, upper_bet_limit, lower_threshold, f_scaled, b):
-    """
-    Runs multiple simulations of repeated bets with variable bet sizes.
 
-    Parameters:
-    - num_simulations (int): # of simulations to run.
-    ...all other parameters as defined in run_single_simulation
-
-    Returns:
-    - final_wealths (list): Final wealth from each simulation
-    - peak_wealths (list): Peak wealth from each simulation
-    - min_wealths (list): Minimum wealth from each simulation
-    - all_wealth_histories (list): Wealth histories from all simulations
-    - ruin_count (int): Number of simulations that ended in ruin
-    - smallest_min_wealth (float): Smallest minimum wealth achieved across all simulations
-    - highest_peak_wealth (float): Highest peak wealth achieved across all simulations
-    - simulation_df (DataFrame): DataFrame containing all simulation statistics
-    """
     ruin_count = 0
     final_wealths = []
     peak_wealths = []
@@ -201,13 +167,7 @@ def run_multiple_simulations(num_simulations, starting_wealth, p_up, p_down, upp
     return final_wealths, peak_wealths, min_wealths, all_wealth_histories, ruin_count, smallest_min_wealth, highest_peak_wealth, simulation_df  # Modified Return
 
 def plot_sample_histories(all_wealth_histories, num_samples=10, g=1, scale=1):
-    """
-    Plots wealth progression for a sample of simulations.
 
-    Parameters:
-    - all_wealth_histories (list): List of wealth histories from all simulations
-    - num_samples (int): # of simulations to plot
-    """
     plt.figure(figsize=(12, 6))
     for i, history in enumerate(all_wealth_histories[:num_samples]):
         plt.plot(history, label=f"Simulation {i+1}")
@@ -219,13 +179,7 @@ def plot_sample_histories(all_wealth_histories, num_samples=10, g=1, scale=1):
     plt.show()
 
 def plot_sample_histories_log(all_wealth_histories, num_samples=10, g=1, scale=1):
-    """
-    Plots log-scaled wealth progression for a sample of simulations.
 
-    Parameters:
-    - all_wealth_histories (list): List of wealth histories from all simulations
-    - num_samples (int): # of simulations to plot
-    """
     plt.figure(figsize=(12, 6))
     for i, history in enumerate(all_wealth_histories[:num_samples]):
         plt.plot(history, label=f"Simulation {i+1}")
@@ -238,12 +192,7 @@ def plot_sample_histories_log(all_wealth_histories, num_samples=10, g=1, scale=1
     plt.show()
 
 def plot_final_wealth_histogram(final_wealths, num_simulations, g=1, scale=1):
-    """
-    Plots histogram of final wealths from all simulations
 
-    Parameters:
-    - final_wealths (list): Final wealth from each simulation
-    """
     plt.figure(figsize=(12, 6))
     plt.hist(final_wealths, bins=75, edgecolor='black', alpha=0.7)
     plt.xlabel("Final Wealth")
@@ -253,17 +202,7 @@ def plot_final_wealth_histogram(final_wealths, num_simulations, g=1, scale=1):
     plt.show()
 
 def compute_optimal_fraction(p, b, g):
-    """
-    Computes optimal fraction f* based on the CRRA utility
 
-    Parameters:
-    - p (float): Probability of winning each bet
-    - b (float): Net odds received on the wager (b to 1)
-    - g (float): Relative risk aversion coefficient
-
-    Returns:
-    - f_star (float): Optimal fraction of wealth to bet
-    """
     if g == 0:
         # risk-neutral case: maximize expected value
         f_star = (p * b - (1 - p)) / b
@@ -278,9 +217,7 @@ def compute_optimal_fraction(p, b, g):
     return f_star
 
 def simulate_gamblers_ruin_advanced():
-    """
-    Runs the Monte Carlo simulation with adjustable CRRA utility parameters
-    """
+
     print("=== Monte Carlo Betting Simulation ===\n")
 
     # SIMULATION PARAMETERS!
@@ -289,14 +226,14 @@ def simulate_gamblers_ruin_advanced():
     p_down = 1 - p_up                # probability of losing each bet
     upper_bet_limit = 1000           # max number of bets
     lower_threshold = 100             # bankruptcy threshold
-    num_simulations = 1000            # number of simulations to run
+    num_simulations = 100            # number of simulations to run
 
     # BET PARAMETERS
     return_win_percent = 110         # (decimal odds - 1) * 100
     b = return_win_percent / 100     # net odds (b to 1)
 
     # STRATEGY PARAMETERS
-    g = 1                          # gamma > 0 (1 for Kelly)
+    g = 0.5                          # gamma > 0 (1 for Kelly)
     scale = 1                      # scaling factor (1 for full Kelly, 0.5 for half-Kelly)
 
     # calculate optimal fraction based on CRRA utility
@@ -347,7 +284,7 @@ def simulate_gamblers_ruin_advanced():
     plot_final_wealth_histogram(final_wealths, num_simulations=100, g=g, scale=(scale*100))
 
     # Optionally, you can save the DataFrame to a CSV file for further analysis
-    simulation_df.to_csv('simulation_results.csv', index=False)
+   # simulation_df.to_csv('simulation_results.csv', index=False)
 
     print("=== Simulation DataFrame Head ===")
     print(simulation_df.head())  # Display the first few rows of the DataFrame
