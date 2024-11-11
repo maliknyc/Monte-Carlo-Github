@@ -4,7 +4,7 @@ import math
 import pandas as pd
 import numpy as np
 
-def run_single_simulation(starting_wealth, p_up, p_down, upper_bet_limit, lower_threshold, f_scaled, b):
+def run_single_simulation(starting_wealth, p_up_actual, p_down_actual, upper_bet_limit, lower_threshold, f_scaled, b):
 
     current_wealth = starting_wealth
     bet_count = 0
@@ -20,15 +20,15 @@ def run_single_simulation(starting_wealth, p_up, p_down, upper_bet_limit, lower_
         wager_amount = current_wealth * f_scaled
 
         # calculate up_amount and down_amount based on wager_amount and odds
-        up_amount = wager_amount * b    # amount gained if bet is won
-        down_amount = wager_amount      # amount lost if bet is lost
+        up_amount = wager_amount * b    # amount gained if the bet is won
+        down_amount = wager_amount      # amount lost if the bet is lost
 
         outcome = random.random()
 
-        if outcome < p_up:
+        if outcome < p_up_actual:
             current_wealth += up_amount
             result = "Win"
-        elif outcome < p_up + p_down:
+        elif outcome < p_up_actual + p_down_actual:
             current_wealth -= down_amount
             result = "Lose"
         else:
@@ -41,27 +41,27 @@ def run_single_simulation(starting_wealth, p_up, p_down, upper_bet_limit, lower_
         if current_wealth < min_wealth:
             min_wealth = current_wealth
 
-        # uncomment following line to print each bet's outcome...
+        # uncomment the following line to print each bet's outcome
         # print(f"Bet {bet_count}: {result} | Current Wealth: {current_wealth:.2f}")
 
-        # check if wealth has hit ruin
+        # check if wealth has hit the lower threshold
         if current_wealth <= lower_threshold:
-            # uncomment the following lines to print ruin information...
+            # uncomment the following lines to print ruin information
             # print("\n--- Stopping Simulation ---")
             # print(f"Wealth has reached the lower threshold of {lower_threshold}.")
             went_bankrupt = True
             break
 
-    # Final Results (Uncomment to print individual simulation summaries)
+    # Final results (uncomment to print individual simulation summaries)
     # print("\n=== Simulation Summary ===")
-    #print(f"Total Bets Placed: {bet_count}")
+    # print(f"Total Bets Placed: {bet_count}")
     # print(f"Final Wealth: {current_wealth:.2f}")
     # print(f"Peak Wealth Achieved: {peak_wealth:.2f}")
     # print(f"Minimum Wealth Achieved: {min_wealth:.2f}\n")
 
     return wealth_history, peak_wealth, min_wealth, went_bankrupt, bet_count
 
-def run_multiple_simulations(num_simulations, starting_wealth, p_up, p_down, upper_bet_limit, lower_threshold, f_scaled, b):
+def run_multiple_simulations(num_simulations, starting_wealth, p_up_actual, p_down_actual, upper_bet_limit, lower_threshold, f_scaled, b):
 
     ruin_count = 0
     final_wealths = []
@@ -80,10 +80,10 @@ def run_multiple_simulations(num_simulations, starting_wealth, p_up, p_down, upp
     time_to_ruin_list = []       # time to ruin (if applicable)
 
     for sim in range(1, num_simulations + 1):
-        # uncomment the following line to track simulation progress...
+        # uncomment the following line to track simulation progress
         # print(f"\n=== Simulation {sim} ===")
         wealth_history, peak_wealth, min_wealth, went_bankrupt, bet_count = run_single_simulation(
-            starting_wealth, p_up, p_down, upper_bet_limit, lower_threshold, f_scaled, b
+            starting_wealth, p_up_actual, p_down_actual, upper_bet_limit, lower_threshold, f_scaled, b
         )
         all_wealth_histories.append(wealth_history)
         final_wealths.append(wealth_history[-1])
@@ -146,7 +146,7 @@ def run_multiple_simulations(num_simulations, starting_wealth, p_up, p_down, upp
 
     simulation_df = pd.DataFrame(data)
 
-    # FINAL SUMMARY
+    # final summary
     print("\n=== All Simulations Summary ===")
     print(f"Total Simulations Run: {num_simulations}")
     print(f"Ruin Occurred in {ruin_count} Simulations ({ruin_probability:.2f}%)")
@@ -155,7 +155,7 @@ def run_multiple_simulations(num_simulations, starting_wealth, p_up, p_down, upp
     print(f"Highest Peak Wealth Achieved: {highest_peak_wealth}")
     print(f"Average Minimum Wealth Achieved: {average_min_wealth:.2f}")
     print(f"Smallest Minimum Wealth Achieved: {smallest_min_wealth}")
-    print(f"Highest Final Wealth Achieved: {highest_final_wealth}")  # Added Line
+    print(f"Highest Final Wealth Achieved: {highest_final_wealth}")  # added line
 
     if ruin_count > 0:
         print(f"Simulation(s) that hit ruin and survived the most bets ({max_bets_before_ruin} bets): {simulations_with_max_bets_before_ruin}")
@@ -164,7 +164,7 @@ def run_multiple_simulations(num_simulations, starting_wealth, p_up, p_down, upp
 
     print()
 
-    return final_wealths, peak_wealths, min_wealths, all_wealth_histories, ruin_count, smallest_min_wealth, highest_peak_wealth, simulation_df  # Modified Return
+    return final_wealths, peak_wealths, min_wealths, all_wealth_histories, ruin_count, smallest_min_wealth, highest_peak_wealth, simulation_df  # modified return
 
 def plot_sample_histories(all_wealth_histories, num_samples=10, g=1, scale=1):
 
@@ -174,7 +174,7 @@ def plot_sample_histories(all_wealth_histories, num_samples=10, g=1, scale=1):
     plt.xlabel("# of Bets")
     plt.ylabel("Wealth")
     plt.title(f"Wealth Progression after {num_samples} Simulations (γ = {g}; K% = {scale})")
-    #plt.legend()
+   # plt.legend()
     plt.grid(True)
     plt.show()
 
@@ -184,9 +184,8 @@ def plot_sample_histories_log(all_wealth_histories, num_samples=10, g=1, scale=1
     for i, history in enumerate(all_wealth_histories[:num_samples]):
         plt.plot(history, label=f"Simulation {i+1}")
     plt.xlabel("# of Bets")
-    plt.ylabel("Log-Wealth")
+    plt.ylabel("Wealth")
     plt.title(f"Log-Wealth Progression after {num_samples} Simulations (γ = {g}; K% = {scale})")
-    #plt.legend()
     plt.yscale('log')
     plt.grid(True, which="both", ls="--")
     plt.show()
@@ -201,15 +200,16 @@ def plot_final_wealth_histogram(final_wealths, num_simulations, g=1, scale=1):
     plt.grid(True)
     plt.show()
 
-def compute_optimal_fraction(p, b, g):
+def compute_optimal_fraction(p_perceived, b, g):
 
     if g == 0:
         # risk-neutral case: maximize expected value
-        f_star = (p * b - (1 - p)) / b
+        f_star = (p_perceived * b - (1 - p_perceived)) / b
     else:
         try:
-            numerator = ( (p * b) / (1 - p) )**(1/g) - 1
-            denominator = b + ( (p * b) / (1 - p) )**(1/g)
+            ratio = (p_perceived * b) / (1 - p_perceived)
+            numerator = ratio**(1/g) - 1
+            denominator = b + ratio**(1/g)
             f_star = numerator / denominator
         except ZeroDivisionError:
             print("Error: Division by zero encountered in computing f*.")
@@ -218,40 +218,55 @@ def compute_optimal_fraction(p, b, g):
 
 def simulate_gamblers_ruin_advanced():
 
-    print("=== Monte Carlo Betting Simulation ===\n")
+    print("=== Monte Carlo Betting Simulation with Perceived vs. Actual Probabilities ===\n")
 
     # SIMULATION PARAMETERS!
     starting_wealth = 1000          # starting wealth
-    p_up = 0.05                       # probability of winning each bet
-    p_down = 1 - p_up                # probability of losing each bet
-    upper_bet_limit = 1000           # max number of bets
-    lower_threshold = 250             # bankruptcy threshold
-    num_simulations = 1000            # number of simulations to run
+
+    # Actual Probability of Winning (used for determining outcomes)
+    p_up_actual = 0.0905       # actual probability of winning each bet
+    p_down_actual = 1 - p_up_actual
+    
+    '''
+    # Perceived Probability of Winning (used for sizing the bet)
+    p_up_perceived = 0.0905            # perceived probability of winning each bet
+    p_down_perceived = 1 - p_up_perceived
+    '''
+    
+    # Perceived Probability of Winning (Using Probability Weighting)
+    alpha = 0.95
+    p_up_perceived = math.exp(- (math.log(2))**(1 - alpha) * (-math.log(p_up_actual))**alpha)
+    p_down_perceived = 1 - p_up_perceived
+
+
+    upper_bet_limit = 10000           # max number of bets
+    lower_threshold = 1            # bankruptcy threshold
+    num_simulations = 1000           # number of simulations to run
 
     # BET PARAMETERS
-    return_win_percent = 2000         # (decimal odds - 1) * 100
-    b = return_win_percent / 100     # net odds (b to 1)
+    return_win_percent = 1050         # (decimal odds - 1) * 100, e.g., 2000 for b = 20
+    b = return_win_percent / 100      # net odds (b to 1)
 
     # STRATEGY PARAMETERS
-    g = 1                          # gamma > 0 (1 for Kelly)
-    scale = 1                      # scaling factor (1 for full Kelly, 0.5 for half-Kelly)
+    g = 1                           # relative risk aversion coefficient (1 for Kelly)
+    scale = 1                       # scaling factor (1 for full Kelly, 0.5 for half-Kelly)
 
-    # calculate optimal fraction based on CRRA utility
-    f_star = compute_optimal_fraction(p_up, b, g)
+    # calculate optimal fraction based on perceived probability
+    f_star = compute_optimal_fraction(p_up_perceived, b, g)
     f_scaled = f_star * scale
 
     # ensure the fraction is between 0 and 1
     if f_scaled < 0:
-        print("Warning: Computed scaled fraction is negative. Setting f_scaled to 0.")
+        print("Warning: computed scaled fraction is negative. setting f_scaled to 0.")
         f_scaled = 0
     elif f_scaled > 1:
-        print("Warning: Computed scaled fraction exceeds 1. Setting f_scaled to 1.")
+        print("Warning: computed scaled fraction exceeds 1. setting f_scaled to 1.")
         f_scaled = 1
 
     print(f"Parameters for Simulation:")
-    print(f"Starting Wealth: {starting_wealth}")
-    print(f"Probability of Winning (p_up): {p_up}")
-    print(f"Probability of Losing (p_down): {p_down}")
+    print(f"Starting Wealth: ${starting_wealth}")
+    print(f"Perceived Probability of Winning (p_up_perceived): {p_up_perceived}")
+    print(f"Actual Probability of Winning (p_up_actual): {p_up_actual}")
     print(f"Net Odds (b): {b} to 1")
     print(f"Relative Risk Aversion (g): {g}")
     print(f"Scaling Factor (scale): {scale}")
@@ -259,9 +274,9 @@ def simulate_gamblers_ruin_advanced():
     print(f"Scaled Fraction (f_scaled): {f_scaled:.4f}\n")
 
     # calculate EV and other statistics based on scaled fraction
-    # since wager_amount is a fraction, EV per bet = f_scaled * (p_up * b - p_down)
-    bet_EV = f_scaled * (p_up * b - p_down)
-    bet_Var = f_scaled**2 * (p_up * (b**2) + p_down)
+    # since wager_amount is a fraction, EV per bet = f_scaled * (p_up_actual * b - p_down_actual)
+    bet_EV = f_scaled * (p_up_actual * b - p_down_actual)
+    bet_Var = f_scaled**2 * (p_up_actual * (b**2) + p_down_actual)
     bet_Std = math.sqrt(bet_Var)
 
     print(f"Betting Statistics with Scaled Fraction:")
@@ -269,9 +284,9 @@ def simulate_gamblers_ruin_advanced():
     print(f"Expected Variance of Bet (Var): {bet_Var:.4f}")
     print(f"Expected Standard Deviation of Bet (Std): {bet_Std:.4f}\n")
 
-    # Run multiple simulations and capture the new DataFrame
+    # run multiple simulations and capture the new DataFrame
     final_wealths, peak_wealths, min_wealths, all_wealth_histories, ruin_count, smallest_min_wealth, highest_peak_wealth, simulation_df = run_multiple_simulations(
-        num_simulations, starting_wealth, p_up, p_down, upper_bet_limit, lower_threshold, f_scaled, b
+        num_simulations, starting_wealth, p_up_actual, p_down_actual, upper_bet_limit, lower_threshold, f_scaled, b
     )
 
     # plot sample wealth histories (original linear scale)
@@ -281,19 +296,20 @@ def simulate_gamblers_ruin_advanced():
     plot_sample_histories_log(all_wealth_histories, num_samples=100, g=g, scale=(scale*100))
 
     # plot histogram of final wealths
-    plot_final_wealth_histogram(final_wealths, num_simulations=100, g=g, scale=(scale*100))
+    plot_final_wealth_histogram(final_wealths, num_simulations=num_simulations, g=g, scale=(scale*100))
 
-    # Optionally, you can save the DataFrame to a CSV file for further analysis
-   # simulation_df.to_csv('simulation_results.csv', index=False)
+    # optionally, you can save the DataFrame to a CSV file for further analysis
+    # simulation_df.to_csv('simulation_results.csv', index=False)
 
     print("=== Simulation DataFrame Head ===")
-    print(simulation_df.head())  # Display the first few rows of the DataFrame
+    print(simulation_df.head())  # display the first few rows of the DataFrame
 
-#    print("\n=== Additional Insights ===")
- #   print(f"Expected Value of Bet: {bet_EV:.4f}")
-  #  print(f"Expected Variance of Bet: {bet_Var:.4f}")
-   # print(f"Expected Standard Deviation of Bet: {bet_Std:.4f}")
-    #print(final_wealths)
+    # uncomment the following lines if you want additional insights printed
+    # print("\n=== Additional Insights ===")
+    # print(f"Expected Value of Bet: {bet_EV:.4f}")
+    # print(f"Expected Variance of Bet: {bet_Var:.4f}")
+    # print(f"Expected Standard Deviation of Bet: {bet_Std:.4f}")
+    # print(final_wealths)
 
 if __name__ == "__main__":
     simulate_gamblers_ruin_advanced()
