@@ -1,0 +1,30 @@
+=== Monte Carlo Betting Simulation with Perceived vs. Actual Probabilities ===
+
+Actual EV (per $100 stake): 150.000
+Actual Edge: 1.500%
+Perceived EV (per $100 stake): 150.000
+Perceived Edge: 1.500%
+
+Parameters for Simulation:
+Starting Wealth: $1000
+Perceived Probability of Winning (p_up_perceived): 0.1500
+Actual Probability of Winning (p_up_actual): 0.15
+Net Odds (b): 9.0 to 1
+Relative Risk Aversion (g): 1
+Scaling Factor (scale): 1
+Optimal Fraction (f*): 0.0556
+Scaled Fraction (f_scaled): 0.0556
+
+Upper bet limit: 10000
+Ruin threshold: 50
+
+=== All Simulations Summary ===
+Total Simulations Run: 1000
+Ruin Occurred in 45 Simulations (4.50%)
+Average Final Wealth: 7137652526163381468847794436104065817634121301904876952379029958224490356801536.00
+Average Peak Wealth Achieved: 14171831071393192917244894552334456222732901068578428471826523407686426637107200.00
+Highest Peak Wealth Achieved: 1.4171303570770165e+82
+Average Minimum Wealth Achieved: 511.78
+Smallest Minimum Wealth Achieved: 47.23325070536534
+Highest Final Wealth Achieved: 7.1371824134692275e+81
+Simulation(s) that hit ruin and survived the most bets (1089 bets): [346]

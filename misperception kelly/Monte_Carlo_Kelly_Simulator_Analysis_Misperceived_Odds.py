@@ -224,27 +224,28 @@ def simulate_gamblers_ruin_advanced():
     starting_wealth = 1000          # starting wealth
 
     # Actual Probability of Winning (used for determining outcomes)
-    p_up_actual = 0.0905       # actual probability of winning each bet
+    p_up_actual = 0.15       # actual probability of winning each bet
     p_down_actual = 1 - p_up_actual
     
-    '''
+
     # Perceived Probability of Winning (used for sizing the bet)
-    p_up_perceived = 0.0905            # perceived probability of winning each bet
+    p_up_perceived = 0.2            # perceived probability of winning each bet
     p_down_perceived = 1 - p_up_perceived
+
     '''
-    
     # Perceived Probability of Winning (Using Probability Weighting)
-    alpha = 0.95
+    alpha = 0.75
     p_up_perceived = math.exp(- (math.log(2))**(1 - alpha) * (-math.log(p_up_actual))**alpha)
     p_down_perceived = 1 - p_up_perceived
+    '''
 
 
-    upper_bet_limit = 10000           # max number of bets
-    lower_threshold = 1            # bankruptcy threshold
+    upper_bet_limit = 1000           # max number of bets
+    lower_threshold = 50           # bankruptcy threshold
     num_simulations = 1000           # number of simulations to run
 
     # BET PARAMETERS
-    return_win_percent = 1050         # (decimal odds - 1) * 100, e.g., 2000 for b = 20
+    return_win_percent = 900         # (decimal odds - 1) * 100, e.g., 2000 for b = 20
     b = return_win_percent / 100      # net odds (b to 1)
 
     # STRATEGY PARAMETERS
@@ -262,16 +263,32 @@ def simulate_gamblers_ruin_advanced():
     elif f_scaled > 1:
         print("Warning: computed scaled fraction exceeds 1. setting f_scaled to 1.")
         f_scaled = 1
-
+        
+        
+    actual_ev = (p_up_actual * (100 * (b+1)))
+    actual_edge = actual_ev/100
+    
+    perceived_ev = (p_up_perceived * (100 * (b+1)))
+    perceived_edge = perceived_ev/100
+    
+    
+    print(f"Actual EV (per $100 stake): {actual_ev:.3f}")
+    print(f"Actual Edge: {actual_edge:.3f}%")
+    print(f"Perceived EV (per $100 stake): {perceived_ev:.3f}")
+    print(f"Perceived Edge: {perceived_edge:.3f}%\n")
+    
     print(f"Parameters for Simulation:")
     print(f"Starting Wealth: ${starting_wealth}")
-    print(f"Perceived Probability of Winning (p_up_perceived): {p_up_perceived}")
+    print(f"Perceived Probability of Winning (p_up_perceived): {p_up_perceived:.4f}")
     print(f"Actual Probability of Winning (p_up_actual): {p_up_actual}")
     print(f"Net Odds (b): {b} to 1")
     print(f"Relative Risk Aversion (g): {g}")
     print(f"Scaling Factor (scale): {scale}")
     print(f"Optimal Fraction (f*): {f_star:.4f}")
     print(f"Scaled Fraction (f_scaled): {f_scaled:.4f}\n")
+    
+    print(f"Upper bet limit: {upper_bet_limit}")
+    print(f"Ruin threshold: {lower_threshold}")
 
     # calculate EV and other statistics based on scaled fraction
     # since wager_amount is a fraction, EV per bet = f_scaled * (p_up_actual * b - p_down_actual)
@@ -279,10 +296,11 @@ def simulate_gamblers_ruin_advanced():
     bet_Var = f_scaled**2 * (p_up_actual * (b**2) + p_down_actual)
     bet_Std = math.sqrt(bet_Var)
 
-    print(f"Betting Statistics with Scaled Fraction:")
-    print(f"Expected Value of Bet (EV): {bet_EV:.4f}")
-    print(f"Expected Variance of Bet (Var): {bet_Var:.4f}")
-    print(f"Expected Standard Deviation of Bet (Std): {bet_Std:.4f}\n")
+
+#    print(f"Betting Statistics with Scaled Fraction:")
+ #   print(f"Expected Value of Bet (EV): {bet_EV:.4f}")
+  #  print(f"Expected Variance of Bet (Var): {bet_Var:.4f}")
+   # print(f"Expected Standard Deviation of Bet (Std): {bet_Std:.4f}\n")
 
     # run multiple simulations and capture the new DataFrame
     final_wealths, peak_wealths, min_wealths, all_wealth_histories, ruin_count, smallest_min_wealth, highest_peak_wealth, simulation_df = run_multiple_simulations(
@@ -290,7 +308,7 @@ def simulate_gamblers_ruin_advanced():
     )
 
     # plot sample wealth histories (original linear scale)
-    plot_sample_histories(all_wealth_histories, num_samples=100, g=g, scale=(scale*100))
+    plot_sample_histories(all_wealth_histories, num_samples=num_simulations, g=g, scale=(scale*100))
 
     # plot sample wealth histories with log scale
     plot_sample_histories_log(all_wealth_histories, num_samples=100, g=g, scale=(scale*100))
@@ -299,7 +317,7 @@ def simulate_gamblers_ruin_advanced():
     plot_final_wealth_histogram(final_wealths, num_simulations=num_simulations, g=g, scale=(scale*100))
 
     # optionally, you can save the DataFrame to a CSV file for further analysis
-    # simulation_df.to_csv('simulation_results.csv', index=False)
+    simulation_df.to_csv('simulation_results.csv', index=False)
 
     print("=== Simulation DataFrame Head ===")
     print(simulation_df.head())  # display the first few rows of the DataFrame
