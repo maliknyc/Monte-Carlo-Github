@@ -320,7 +320,7 @@ def simulate_gamblers_ruin_advanced():
     simulation_df.to_csv('simulation_results.csv', index=False)
 
     print("=== Simulation DataFrame Head ===")
-    print(simulation_df.head())  # display the first few rows of the DataFrame
+  # print(simulation_df.head())  # display the first few rows of the DataFrame
 
     # uncomment the following lines if you want additional insights printed
     # print("\n=== Additional Insights ===")
