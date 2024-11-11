@@ -2,17 +2,6 @@
 
 This simulation models betting strategies using the **Kelly Criterion** and extends it via **Constant Relative Risk Aversion (CRRA)** utility functions. Where the Kelly Criterion is derived from and prescribes logarithmic utility, my proposed generalized Kelly Criterion is derived from the general CRRA utility function (which logarithmic utility is in the family of) and allows for the exploration of alternative betting strategies by adjusting the risk aversion coefficient (`γ`) and a scaling factor.
 
-## Features
-- Isoelastic (CRRA) utility function: adjustable betting strategy based on γ
-- Fractional Kelly strategies
-- Alternative sizing strategies from generalized Kelly Criterion
-- Monte Carlo simulations to test strategies over time
-- Wealth progression and distribution plots
-
-### Requirements
-- **Python 3.8+**
-- **matplotlib** (`pip install matplotlib`)
-
 ## Usage
 
 Modify parameters in the `simulate_gamblers_ruin_advanced()` function:
