@@ -18,6 +18,7 @@ def run_single_simulation(starting_wealth, p_up_actual, p_down_actual, upper_bet
 
         # calculate wager_amount as a fraction of current wealth
         wager_amount = current_wealth * f_scaled
+       # print(wager_amount)
 
         # calculate up_amount and down_amount based on wager_amount and odds
         up_amount = wager_amount * b    # amount gained if the bet is won
@@ -221,15 +222,15 @@ def simulate_gamblers_ruin_advanced():
     print("=== Monte Carlo Betting Simulation with Perceived vs. Actual Probabilities ===\n")
 
     # SIMULATION PARAMETERS!
-    starting_wealth = 1000          # starting wealth
+    starting_wealth = 100          # starting wealth
 
     # Actual Probability of Winning (used for determining outcomes)
-    p_up_actual = 0.15       # actual probability of winning each bet
+    p_up_actual = 0.49       # actual probability of winning each bet
     p_down_actual = 1 - p_up_actual
     
 
     # Perceived Probability of Winning (used for sizing the bet)
-    p_up_perceived = 0.2            # perceived probability of winning each bet
+    p_up_perceived = 0.51            # perceived probability of winning each bet
     p_down_perceived = 1 - p_up_perceived
 
     '''
@@ -240,16 +241,16 @@ def simulate_gamblers_ruin_advanced():
     '''
 
 
-    upper_bet_limit = 1000           # max number of bets
+    upper_bet_limit = 100000           # max number of bets
     lower_threshold = 50           # bankruptcy threshold
     num_simulations = 1000           # number of simulations to run
 
     # BET PARAMETERS
-    return_win_percent = 900         # (decimal odds - 1) * 100, e.g., 2000 for b = 20
+    return_win_percent = 100         # (decimal odds - 1) * 100, e.g., 2000 for b = 20
     b = return_win_percent / 100      # net odds (b to 1)
 
     # STRATEGY PARAMETERS
-    g = 1                           # relative risk aversion coefficient (1 for Kelly)
+    g = 2                           # relative risk aversion coefficient (1 for Kelly)
     scale = 1                       # scaling factor (1 for full Kelly, 0.5 for half-Kelly)
 
     # calculate optimal fraction based on perceived probability
@@ -264,13 +265,19 @@ def simulate_gamblers_ruin_advanced():
         print("Warning: computed scaled fraction exceeds 1. setting f_scaled to 1.")
         f_scaled = 1
         
-        
+    '''
     actual_ev = (p_up_actual * (100 * (b+1)))
     actual_edge = actual_ev/100
     
     perceived_ev = (p_up_perceived * (100 * (b+1)))
     perceived_edge = perceived_ev/100
+    '''
+
+    actual_ev = (p_up_actual * b) - (p_down_actual * 1)
+    actual_edge = actual_ev * 100 
     
+    perceived_ev = (p_up_perceived * b) - (p_down_perceived * 1)
+    perceived_edge = perceived_ev * 100
     
     print(f"Actual EV (per $100 stake): {actual_ev:.3f}")
     print(f"Actual Edge: {actual_edge:.3f}%")
