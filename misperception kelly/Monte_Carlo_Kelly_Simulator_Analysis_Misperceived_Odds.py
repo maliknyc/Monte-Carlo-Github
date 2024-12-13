@@ -222,7 +222,7 @@ def simulate_gamblers_ruin_advanced():
     print("=== Monte Carlo Betting Simulation with Perceived vs. Actual Probabilities ===\n")
 
     # SIMULATION PARAMETERS!
-    starting_wealth = 100          # starting wealth
+    starting_wealth = 1000          # starting wealth
 
     # Actual Probability of Winning (used for determining outcomes)
     p_up_actual = 0.49       # actual probability of winning each bet
@@ -230,7 +230,7 @@ def simulate_gamblers_ruin_advanced():
     
 
     # Perceived Probability of Winning (used for sizing the bet)
-    p_up_perceived = 0.51            # perceived probability of winning each bet
+    p_up_perceived = 0.49            # perceived probability of winning each bet
     p_down_perceived = 1 - p_up_perceived
 
     '''
@@ -241,8 +241,8 @@ def simulate_gamblers_ruin_advanced():
     '''
 
 
-    upper_bet_limit = 100000           # max number of bets
-    lower_threshold = 50           # bankruptcy threshold
+    upper_bet_limit = 10000           # max number of bets
+    lower_threshold = 5           # bankruptcy threshold
     num_simulations = 1000           # number of simulations to run
 
     # BET PARAMETERS
@@ -250,7 +250,7 @@ def simulate_gamblers_ruin_advanced():
     b = return_win_percent / 100      # net odds (b to 1)
 
     # STRATEGY PARAMETERS
-    g = 2                           # relative risk aversion coefficient (1 for Kelly)
+    g = 0.5                           # relative risk aversion coefficient (1 for Kelly)
     scale = 1                       # scaling factor (1 for full Kelly, 0.5 for half-Kelly)
 
     # calculate optimal fraction based on perceived probability
