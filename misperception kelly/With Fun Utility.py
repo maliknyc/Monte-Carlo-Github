@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import math
 import pandas as pd
 import numpy as np
+from scipy.optimize import minimize_scalar
 
 def run_single_simulation(starting_wealth, p_up_actual, p_down_actual, upper_bet_limit, lower_threshold, f_scaled, b):
 
@@ -12,6 +13,9 @@ def run_single_simulation(starting_wealth, p_up_actual, p_down_actual, upper_bet
     peak_wealth = starting_wealth
     min_wealth = starting_wealth
     went_bankrupt = False
+
+    if f_scaled <= 0:
+        return wealth_history, peak_wealth, min_wealth, went_bankrupt, bet_count
 
     while bet_count < upper_bet_limit and current_wealth > lower_threshold:
         bet_count += 1
@@ -163,80 +167,66 @@ def run_multiple_simulations(num_simulations, starting_wealth, p_up_actual, p_do
     else:
         print("No simulations ended in ruin.")
 
-    # --- Added Code Starts Here ---
-    if ruin_count > 0:
-        valid_times = [t for t in time_to_ruin_list if not np.isnan(t)]
-        average_time_to_ruin = sum(valid_times) / ruin_count
-        print(f"Average Time to Ruin: {average_time_to_ruin:.2f} bets")
-    else:
-        print("No simulations ended in ruin. Average Time to Ruin is undefined.")
-    
-    # Compute average of mean log-wealth across all simulations
-    average_mean_log_wealth = sum(mean_log_wealth_list) / num_simulations
-    # Compute average of standard deviations of log-wealth across all simulations
-    average_std_log_wealth = sum(std_log_wealth_list) / num_simulations
-    # Compute average slope of log-wealth across all simulations
-    average_beta = sum(slope_log_wealth_list) / num_simulations
-    
-    # Print the newly computed statistics
-    print(f"Mean of Log-Wealth: {average_mean_log_wealth:.4f}")
-    print(f"Standard Deviation of Log-Wealth: {average_std_log_wealth:.4f}")
-    print(f"Average Slope of Log-Wealth: {average_beta:.10f}")
-    # --- Added Code Ends Here ---
-
     print()
 
     return final_wealths, peak_wealths, min_wealths, all_wealth_histories, ruin_count, smallest_min_wealth, highest_peak_wealth, simulation_df  # modified return
 
-def plot_sample_histories(all_wealth_histories, num_samples=10, g=1, scale=1, alph=1):
+def plot_sample_histories(all_wealth_histories, num_samples=10, g=1, scale=1):
 
-    plt.figure(figsize=(12, 6), dpi = 300)
+    plt.figure(figsize=(12, 6))
     for i, history in enumerate(all_wealth_histories[:num_samples]):
         plt.plot(history, label=f"Simulation {i+1}")
     plt.xlabel("# of Bets")
     plt.ylabel("Wealth")
-    plt.title(f"Wealth Progression after {num_samples} Simulations (γ = {g}; α = {alph}; K% = {scale})")
+    plt.title(f"Wealth Progression after {num_samples} Simulations (γ = {g}; K% = {scale})")
    # plt.legend()
     plt.grid(True)
     plt.show()
 
-def plot_sample_histories_log(all_wealth_histories, num_samples=10, num_sims = 10, g=1, scale=1, alph=1):
+def plot_sample_histories_log(all_wealth_histories, num_samples=10, g=1, scale=1):
 
-    plt.figure(figsize=(12, 6), dpi = 300)
+    plt.figure(figsize=(12, 6))
     for i, history in enumerate(all_wealth_histories[:num_samples]):
         plt.plot(history, label=f"Simulation {i+1}")
     plt.xlabel("# of Bets")
     plt.ylabel("Wealth")
-    plt.title(f"Log-Wealth Progression after {num_sims} Simulations (γ = {g}; α = {alph}; K% = {scale})")
+    plt.title(f"Log-Wealth Progression after {num_samples} Simulations (γ = {g}; K% = {scale})")
     plt.yscale('log')
     plt.grid(True, which="both", ls="--")
     plt.show()
 
-def plot_final_wealth_histogram(final_wealths, num_simulations, g=1, scale=1, alph=1):
+def plot_final_wealth_histogram(final_wealths, num_simulations, g=1, scale=1):
 
-    plt.figure(figsize=(12, 6), dpi = 300)
+    plt.figure(figsize=(12, 6))
     plt.hist(final_wealths, bins=75, edgecolor='black', alpha=0.7)
     plt.xlabel("Final Wealth")
     plt.ylabel("Frequency")
-    plt.title(f"Final Wealth Distribution after {num_simulations} Simulations (γ = {g}; α = {alph}; K% = {scale})")
+    plt.title(f"Final Wealth Distribution after {num_simulations} Simulations (γ = {g}; K% = {scale})")
     plt.grid(True)
     plt.show()
 
-def compute_optimal_fraction(p_perceived, b, g):
+def compute_optimal_fraction(p, b, g, c, alpha, W):
 
-    if g == 0:
-        # risk-neutral case: maximize expected value
-        f_star = (p_perceived * b - (1 - p_perceived)) / b
+    def expected_utility(f):
+        if g == 1:
+            U_m_win = math.log(W * (1 + f * b))
+            U_m_lose = math.log(W * (1 - f))
+        else:
+            U_m_win = (W * (1 + f * b))**(1 - g) / (1 - g)
+            U_m_lose = (W * (1 - f))**(1 - g) / (1 - g)
+        U_f = c * math.log(1 + alpha * f * b)
+        E_U = p * U_m_win + (1 - p) * U_m_lose + U_f
+        return E_U
+
+    def objective(f):
+        return -expected_utility(f)
+
+    result = minimize_scalar(objective, bounds=(0, 1), method='bounded')
+
+    if result.success:
+        return result.x
     else:
-        try:
-            ratio = (p_perceived * b) / (1 - p_perceived)
-            numerator = ratio**(1/g) - 1
-            denominator = b + ratio**(1/g)
-            f_star = numerator / denominator
-        except ZeroDivisionError:
-            print("Error: Division by zero encountered in computing f*.")
-            f_star = 0
-    return f_star
+        return 0
 
 def simulate_gamblers_ruin_advanced():
 
@@ -246,38 +236,40 @@ def simulate_gamblers_ruin_advanced():
     starting_wealth = 1000          # starting wealth
 
     # Actual Probability of Winning (used for determining outcomes)
-    p_up_actual = 1/34       # actual probability of winning each bet
+    p_up_actual = 0.1       # actual probability of winning each bet
     p_down_actual = 1 - p_up_actual
-
-
-    '''
-    # Perceived Probability of Winning (used for sizing the bet)
-    p_up_perceived = 0.51            # perceived probability of winning each bet
-    p_down_perceived = 1 - p_up_perceived
-    '''
     
-    # Perceived Probability of Winning (Using Probability Weighting)
-    alpha = 1 # 0.9884032 is the point at which one bets on negative ev roulette
-  #  p_up_perceived = math.exp(- (math.log(2))**(1 - alpha) * (-math.log(p_up_actual))**alpha) # modified 50% one
-    p_up_perceived = np.exp(-((-np.log(p_up_actual)) ** alpha))
+
+    # Perceived Probability of Winning (used for sizing the bet)
+    p_up_perceived = p_up_actual            # perceived probability of winning each bet
     p_down_perceived = 1 - p_up_perceived
 
+    '''
+    # Perceived Probability of Winning (Using Probability Weighting)
+    alpha = 0.75
+    p_up_perceived = math.exp(- (math.log(2))**(1 - alpha) * (-math.log(p_up_actual))**alpha)
+    p_down_perceived = 1 - p_up_perceived
+    '''
 
 
-    upper_bet_limit = 10000           # max number of bets
-    lower_threshold = 10           # bankruptcy threshold
+    upper_bet_limit = 1000           # max number of bets
+    lower_threshold = 1           # bankruptcy threshold
     num_simulations = 1000           # number of simulations to run
 
     # BET PARAMETERS
-    return_win_percent = 3500         # (decimal odds - 1) * 100, e.g., 2000 for b = 20
+    return_win_percent = 100         # (decimal odds - 1) * 100, e.g., 2000 for b = 20
     b = return_win_percent / 100      # net odds (b to 1)
 
     # STRATEGY PARAMETERS
-    g = 0.93                          # relative risk aversion coefficient (1 for Kelly)
+    g = 1                           # relative risk aversion coefficient (1 for Kelly)
     scale = 1                       # scaling factor (1 for full Kelly, 0.5 for half-Kelly)
 
+    # Fun Utility Parameters
+    c = 0
+    alpha = 0
+
     # calculate optimal fraction based on perceived probability
-    f_star = compute_optimal_fraction(p_up_perceived, b, g)
+    f_star = compute_optimal_fraction(p_up_perceived, b, g, c, alpha, starting_wealth)
     f_scaled = f_star * scale
 
     # ensure the fraction is between 0 and 1
@@ -323,7 +315,7 @@ def simulate_gamblers_ruin_advanced():
     # calculate EV and other statistics based on scaled fraction
     # since wager_amount is a fraction, EV per bet = f_scaled * (p_up_actual * b - p_down_actual)
     bet_EV = f_scaled * (p_up_actual * b - p_down_actual)
-    bet_Var = f_scaled**2 * (p_up_actual * (b**2) + p_down_actual)
+    bet_Var = f_scaled**2 * (p_up_actual * (b ** 2) + p_down_actual)
     bet_Std = math.sqrt(bet_Var)
 
 
@@ -338,18 +330,18 @@ def simulate_gamblers_ruin_advanced():
     )
 
     # plot sample wealth histories (original linear scale)
-    plot_sample_histories(all_wealth_histories, num_samples=num_simulations, g=g, scale=(scale*100), alph=alpha)
+    plot_sample_histories(all_wealth_histories, num_samples=num_simulations, g=g, scale=(scale*100))
 
     # plot sample wealth histories with log scale
-    plot_sample_histories_log(all_wealth_histories, num_samples=100, num_sims=num_simulations, g=g, scale=(scale*100), alph=alpha)
+    plot_sample_histories_log(all_wealth_histories, num_samples=100, g=g, scale=(scale*100))
 
     # plot histogram of final wealths
-    plot_final_wealth_histogram(final_wealths, num_simulations=num_simulations, g=g, scale=(scale*100), alph=alpha)
+    plot_final_wealth_histogram(final_wealths, num_simulations=num_simulations, g=g, scale=(scale*100))
 
     # optionally, you can save the DataFrame to a CSV file for further analysis
     simulation_df.to_csv('simulation_results.csv', index=False)
 
-  #  print("=== Simulation DataFrame Head ===")
+    print("=== Simulation DataFrame Head ===")
   # print(simulation_df.head())  # display the first few rows of the DataFrame
 
     # uncomment the following lines if you want additional insights printed
